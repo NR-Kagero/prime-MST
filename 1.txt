@@ -1,0 +1,68 @@
+#include <iostream>
+
+using namespace std;
+static bool *included;
+static int **graph,*currentMinEdges,*path,n=5;
+void intialArrays()
+{
+    path=new int[n];
+    included=new bool[n];
+    currentMinEdges=new int[n];
+    for(int i=0; i<n; i++)
+    {
+        included[i]=false;
+        currentMinEdges[i]=INT_MAX;
+        path[i]=INT_MAX;
+    }
+}
+int arraySmallest(int *arr)
+{
+    int ind=0,smallest=INT_MAX;
+    for(int i=0; i<n; i++)
+    {
+        if(smallest>arr[i]&&included[i]==false&&arr[i]!=0)
+        {
+            smallest=arr[i];
+            ind=i;
+        }
+    }
+    return ind;
+}
+void MST(){
+    graph=new int*[n];
+    for(int i=0;i<n;i++){
+        graph[i]=new int[n];
+        cout<<"Enter node "<<i+1<<" edges"<<endl;
+        for(int j=0;j<n;j++){
+            cin>>graph[i][j];
+        }
+    }
+    intialArrays();
+    currentMinEdges[0]=0;
+    included[0]=1;
+    path[0]=-1;
+    for(int i=0;i<n-1;i++){
+        int small=arraySmallest(currentMinEdges);
+        included[small]=1;
+        for(int j=0;j<n;j++){
+             if(graph[small][j]<currentMinEdges[j]&&included[j]==false&&graph[small][j]!=0){
+                    currentMinEdges[j]=graph[small][j];
+                    path[j]=small;
+                }
+        }
+    }
+}
+void printMST(){
+    for(int i=1;i<n;i++){
+        cout<<path[i]<<"->"<<i<<"\tEdge weight ="<<graph[i][path[i]]<<endl;
+    }
+}
+int main()
+{
+    cout<<"Enter nodes count : ";
+    cin>>n;
+    MST();
+    printMST();
+
+    return 0;
+}
